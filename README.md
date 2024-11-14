@@ -48,7 +48,8 @@ Users should be able to:
 3. Set up a MongoDB instance and update the database URI in your environment configuration.
 4. Run the data seeding script to insert mock data:
    ```bash
-   ts-node server/src/scripts/insert-seed
+   cd server
+   npm run seed-data
    ```
 5. Run the NestJS backend:
    ```bash
