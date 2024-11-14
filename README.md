@@ -16,6 +16,7 @@ Each catalog represents a collection of products with metadata such as name, typ
 ### User Capabilities
 
 Users should be able to:
+
 - View a table of the catalogs.
 - See each catalog’s name, vertical, primary status, and if it’s multi-locale.
 - Verify if the catalog is primary for its vertical.
@@ -45,7 +46,7 @@ Users should be able to:
    cd server
    npm install
    ```
-3. Set up a MongoDB instance and update the database URI in your environment configuration.
+3. Set up a MongoDB instance and update the MONGO_URL in your environment configuration.
 4. Run the data seeding script to insert mock data:
    ```bash
    cd server
