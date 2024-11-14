@@ -5,6 +5,6 @@ export const databaseProviders = [
   {
     provide: DATABASE_CONNECTION_INJECTION_TOKEN,
     useFactory: (): Promise<typeof mongoose> =>
-      mongoose.connect('mongodb://localhost/nest'),
+      mongoose.connect(`${process.env.MONGO_URL}/nest`),
   },
 ];
