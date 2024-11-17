@@ -46,7 +46,7 @@ Users should be able to:
    cd server
    npm install
    ```
-3. Set up a MongoDB instance and update the MONGO_URL in your environment configuration.
+3. Set up a MongoDB instance and update the `MONGO_URL` in your environment configuration. Also add the `CLIENT_URL` to .env in server folder and `VITE_SERVER_URL` to .env in client folder.
 4. Run the data seeding script to insert mock data:
    ```bash
    cd server
@@ -65,6 +65,9 @@ Users should be able to:
 
 ## API Endpoints
 
-- **GET /catalogs**: Fetch all catalogs
-- **POST /catalogs**: Add a new catalog
-- **PUT /catalogs/?catalogId=id**: Update a catalog
+- **GET /catalogs**: Fetch all catalogs.
+- **POST /catalogs/create**: Add a new catalog.
+- **PUT /catalogs/update?catalogId=id**: Update a catalog.
+
+- **DELETE /catalogs/delete?ids=id1,id2,...,idN**: Delete multiple catalogs in bulk.  
+  Allows the user to delete several catalogs at once by specifying catalog IDs as a comma-separated list in the `ids` query parameter.

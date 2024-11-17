@@ -9,7 +9,7 @@ import { Catalog, Vertical } from '../utils/types/catalog';
 import { useQueryClient } from '@tanstack/react-query';
 import { CATALOGS } from '../utils/constants';
 
-const initialValues = {
+const initialValues: Omit<Catalog, '_id' | 'indexedAt'> = {
 	name: '',
 	vertical: Vertical.general,
 	locales: [],
@@ -19,11 +19,11 @@ const initialValues = {
 export const Home = () => {
 	const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
-	const [formState, setFormState] = useState<Omit<Catalog, 'indexedAt' | '_id'>>({ ...initialValues });
+	const [formState, setFormState] = useState<typeof initialValues>({ ...initialValues });
 
 	const queryClient = useQueryClient();
 
-	const { mutate: createCatalogMutation } = useCreateCatalog<typeof formState>();
+	const { mutate: createCatalogMutation } = useCreateCatalog<typeof initialValues>();
 
 	const handleCreateCatalog = () => {
 		createCatalogMutation(formState, {
@@ -31,6 +31,9 @@ export const Home = () => {
 				setCreateDialogOpen(false);
 				setFormState({ ...initialValues });
 				queryClient.invalidateQueries({ queryKey: [CATALOGS] });
+			},
+			onError: (err) => {
+				console.log('err: ', err);
 			},
 		});
 	};

@@ -9,19 +9,16 @@ export const CatalogSchema = new mongoose.Schema(
       required: true,
     },
     primary: Boolean,
-
     vertical: {
       type: String,
       default: 'general',
       enum: ['fashion', 'home', 'general'],
     },
-
     locales: [
       {
         type: String,
       },
     ],
-
     indexedAt: { type: Date, default: () => new Date() },
   },
   {

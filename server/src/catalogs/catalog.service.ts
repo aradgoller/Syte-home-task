@@ -20,7 +20,9 @@ export class CatalogService {
         primary: true,
       });
 
-      await catalogWithPrimaryTrue.updateOne({ primary: false });
+      if (catalogWithPrimaryTrue) {
+        await catalogWithPrimaryTrue.updateOne({ primary: false });
+      }
     }
 
     const createdCatalog = new this.catalogModel(createCatalogDto);
@@ -37,14 +39,25 @@ export class CatalogService {
         primary: true,
       });
 
-      await catalogWithPrimaryTrue.updateOne({ primary: false });
+      if (catalogWithPrimaryTrue) {
+        await catalogWithPrimaryTrue.updateOne({ primary: false });
+      }
     }
 
     const catalogToUpdate = await this.catalogModel.findOne({ _id: catalogId });
 
-    const updatedCatalog = await catalogToUpdate.updateOne(updateCatalogDto);
+    const updatedCatalog = await catalogToUpdate.updateOne({
+      ...updateCatalogDto,
+      indexedAt: new Date(),
+    });
 
     return updatedCatalog;
+  }
+
+  async delete(ids: string[]): Promise<string> {
+    await this.catalogModel.deleteMany({ _id: { $in: ids } });
+
+    return 'Deleted successfully';
   }
 
   async findAll(): Promise<CatalogDocument[]> {

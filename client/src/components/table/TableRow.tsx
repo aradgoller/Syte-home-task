@@ -26,16 +26,16 @@ export const TableRow = ({ tableHead, catalog, selected, handleSelectRow }: Prop
 		vertical: catalog.vertical,
 	};
 
-	const [formState, setFormState] = useState<Omit<Catalog, 'indexedAt' | '_id'>>(initialValues);
+	const [formState, setFormState] = useState<typeof initialValues>(initialValues);
 
 	const queryClient = useQueryClient();
 
-	const { mutate: updateCatalogMutation } = useUpdateCatalog<Omit<Catalog, 'indexedAt' | '_id'>>(catalog._id);
+	const { mutate: updateCatalogMutation } = useUpdateCatalog<typeof initialValues>(catalog._id);
 
 	const getValueByColumn = (column: keyof Catalog) => {
 		return match(column)
 			.with('locales', (value) => {
-				return value.length > 1 ? 'Yes' : 'No';
+				return catalog[value].length > 1 ? 'Yes' : 'No';
 			})
 			.with('primary', (value) => {
 				return catalog[value] ? 'Yes' : 'No';
@@ -48,7 +48,6 @@ export const TableRow = ({ tableHead, catalog, selected, handleSelectRow }: Prop
 		updateCatalogMutation(formState, {
 			onSuccess: () => {
 				setUpdateDialogOpen(false);
-				setFormState(initialValues);
 				queryClient.invalidateQueries({ queryKey: [CATALOGS] });
 			},
 			onError: (err) => {
@@ -83,6 +82,7 @@ export const TableRow = ({ tableHead, catalog, selected, handleSelectRow }: Prop
 					Edit
 				</Button>
 			</TableCell>
+
 			<ConfirmDialog
 				open={updateDialogOpen}
 				onClose={handleCloseDialog}

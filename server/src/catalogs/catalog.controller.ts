@@ -6,12 +6,14 @@ import {
   Body,
   HttpException,
   HttpStatus,
-  Param,
   Query,
+  Delete,
+  Param,
 } from '@nestjs/common';
 import { CatalogService } from './catalog.service';
 import { CatalogDocument } from '../interfaces/catalog.interface';
 import { CreateOrUpdateCatalogDto } from 'src/dtos/create-or-update-catalog.dto';
+import { HttpError } from 'src/http-exception.filter';
 
 @Controller('catalogs')
 export class CatalogsController {
@@ -22,43 +24,39 @@ export class CatalogsController {
     try {
       await this.catalogService.create(createCatalogDto);
     } catch (error) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: 'Bad request',
-        },
-        HttpStatus.BAD_REQUEST,
-        {
-          cause: error,
-        },
-      );
+      throw HttpError(error);
     }
   }
 
-  @Put('/update')
+  @Put('/update/:id')
   async update(
     @Body() updateCatalogDto: CreateOrUpdateCatalogDto,
-    @Query() query: { catalogId: string },
+    @Param('id') id: string,
   ) {
     try {
-      await this.catalogService.update(updateCatalogDto, query.catalogId);
+      await this.catalogService.update(updateCatalogDto, id);
     } catch (error) {
-      console.log('error: ', error);
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: 'Bad request',
-        },
-        HttpStatus.BAD_REQUEST,
-        {
-          cause: error,
-        },
-      );
+      throw HttpError(error);
+    }
+  }
+
+  @Delete('/delete')
+  async delete(@Query('ids') ids: string): Promise<string> {
+    const idsArray = ids.split(',');
+
+    try {
+      return this.catalogService.delete(idsArray);
+    } catch (error) {
+      throw HttpError(error);
     }
   }
 
   @Get()
   async findAll(): Promise<CatalogDocument[]> {
-    return this.catalogService.findAll();
+    try {
+      return this.catalogService.findAll();
+    } catch (error) {
+      throw HttpError(error);
+    }
   }
 }

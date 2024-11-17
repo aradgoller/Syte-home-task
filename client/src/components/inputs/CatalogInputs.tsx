@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
+import { Checkbox, FormControlLabel, MenuItem, Stack, TextField } from '@mui/material';
 import { Catalog, Vertical } from '../../utils/types/catalog';
 import { LOCALES } from '../../utils/constants';
 
@@ -16,27 +16,35 @@ export const CatalogInputs = ({ formState, setFormState }: Props) => {
 				onChange={(e) => setFormState((prev) => ({ ...prev, name: e.target.value }))}
 			/>
 
-			<Select
+			<TextField
 				value={formState.vertical}
+				select
 				onChange={(e) => setFormState((prev) => ({ ...prev, vertical: e.target.value as Vertical }))}
+				label='Vertical'
 			>
 				<MenuItem value={Vertical.general}>General</MenuItem>
 				<MenuItem value={Vertical.fashion}>Fashion</MenuItem>
 				<MenuItem value={Vertical.home}>Home</MenuItem>
-			</Select>
+			</TextField>
 
 			<FormControlLabel
-				control={<Checkbox onChange={(e, checked) => setFormState((prev) => ({ ...prev, primary: checked }))} />}
+				control={
+					<Checkbox
+						checked={formState.primary}
+						onChange={(e, checked) => setFormState((prev) => ({ ...prev, primary: checked }))}
+					/>
+				}
 				label='Primary'
 			/>
 
-			<Typography>Locales (multiple)</Typography>
-			<Select
-				multiple
+			<TextField
 				value={formState.locales}
 				onChange={(e) => {
-					setFormState((prev) => ({ ...prev, locales: e.target.value as string[] }));
+					setFormState((prev) => ({ ...prev, locales: e.target.value as unknown as string[] }));
 				}}
+				select
+				slotProps={{ select: { multiple: true } }}
+				label='Locales'
 			>
 				{LOCALES.map((locale) => (
 					<MenuItem
@@ -46,7 +54,7 @@ export const CatalogInputs = ({ formState, setFormState }: Props) => {
 						{locale}
 					</MenuItem>
 				))}
-			</Select>
+			</TextField>
 		</Stack>
 	);
 };

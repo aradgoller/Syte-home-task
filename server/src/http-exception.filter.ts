@@ -3,6 +3,7 @@ import {
   Catch,
   ArgumentsHost,
   HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -19,3 +20,15 @@ export class HttpExceptionFilter implements ExceptionFilter {
     });
   }
 }
+
+export const HttpError = (error: any) =>
+  new HttpException(
+    {
+      status: HttpStatus.BAD_REQUEST,
+      error: error.message,
+    },
+    HttpStatus.BAD_REQUEST,
+    {
+      cause: error,
+    },
+  );

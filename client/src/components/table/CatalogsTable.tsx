@@ -12,13 +12,13 @@ export const CatalogTable = () => {
 
 	const catalogs = response?.data;
 
-	if (!catalogs) {
+	if (!catalogs || catalogs.length === 0) {
 		return null;
 	}
 
-	const tableHead = Object.keys(catalogs[0]).filter((field) => field !== '_id') as (keyof Catalog)[];
+	const tableHeadWithoutId = Object.keys(catalogs[0]).filter((field) => field !== '_id') as (keyof Catalog)[];
 
-	const handleSelectAllRows = (checked: boolean, catalogIds: Catalog['_id'][]) => {
+	const handleSelectAllRows = (checked: boolean, catalogIds: Array<Catalog['_id']>) => {
 		if (checked) {
 			setSelectedRows(catalogIds);
 			return;
@@ -40,10 +40,9 @@ export const CatalogTable = () => {
 				<TableContainer>
 					<TableMui>
 						<TableHead
-							sx={{ bgcolor: '#ededed' }}
-							headLabel={tableHead}
+							headLabel={tableHeadWithoutId}
 							rowCount={catalogs.length}
-							numSelected={selectedRows.length}
+							selectedRows={selectedRows}
 							onSelectAllRows={(checked) => {
 								handleSelectAllRows(
 									checked,
@@ -56,7 +55,7 @@ export const CatalogTable = () => {
 							{catalogs?.map((catalog) => (
 								<TableRow
 									key={catalog._id}
-									tableHead={tableHead}
+									tableHead={tableHeadWithoutId}
 									catalog={catalog}
 									selected={selectedRows.includes(catalog._id)}
 									handleSelectRow={() => handleSelectRow(catalog._id)}
